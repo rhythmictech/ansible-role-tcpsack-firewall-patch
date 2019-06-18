@@ -1,0 +1,13 @@
+- name: Unsupported Warning
+  debug:
+    msg: "Firewalld is in use on this system, but firewalld functionality is not yet implemented"
+  failed_when: true
+# - name: Block malicious IPv4 SACK packets
+#   firewalld:
+#     immediate: yes
+#     permanent: yes
+
+# Officially documented firewalld commands:
+# firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP
+# firewall-cmd --permanent --direct --add-rule ipv6 filter INPUT 0 -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP
+# firewall-cmd --reload

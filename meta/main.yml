@@ -1,0 +1,33 @@
+galaxy_info:
+  role_name: tcpsack-firewall-patch
+  author: Scott Miller
+  description: Ansible Role to mitigate the TCP SACK panic vulnerability https://access.redhat.com/security/vulnerabilities/tcpsack
+  company: RhythmicTech
+  license: MIT
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: Amazon
+      versions:
+        - all
+    - name: EL
+      versions:
+        - all
+
+  galaxy_tags:
+    - ubuntu
+    - debian
+    - el
+    - amazon
+    - rhel
+    - system
+    - security
+
+dependencies: []

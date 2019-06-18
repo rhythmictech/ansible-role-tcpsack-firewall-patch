@@ -1,0 +1,11 @@
+---
+- name: collect facts about system services
+  service_facts: {}
+
+- name: Ensure IPtables rules are set
+  import_tasks: iptables.yml
+  when: ansible_facts.services['iptables.service'].state == "running"
+
+- name: Ensure Firewalld rules are set
+  import_tasks: firewalld.yml
+  when: ansible_facts.services['firewalld.service'].state == "running"

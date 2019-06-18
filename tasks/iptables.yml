@@ -1,0 +1,29 @@
+- name: Block malicious IPv4 SACK packets
+  iptables:
+    action: insert
+    chain: INPUT
+    comment: Block malicious IPv4 SACK packets https://access.redhat.com/security/vulnerabilities/tcpsack
+    ip_version: ipv4
+    jump: DROP
+    match: tcpmss --mss 1:500
+    protocol: tcp
+    tcp_flags:
+      flags:
+        - SYN
+      flags_set:
+        - SYN
+
+- name: Block malicious IPv6 SACK packets
+  iptables:
+    action: insert
+    chain: INPUT
+    comment: Block malicious IPv6 SACK packets https://access.redhat.com/security/vulnerabilities/tcpsack
+    ip_version: ipv6
+    jump: DROP
+    match: tcpmss --mss 1:500
+    protocol: tcp
+    tcp_flags:
+      flags:
+        - SYN
+      flags_set:
+        - SYN
