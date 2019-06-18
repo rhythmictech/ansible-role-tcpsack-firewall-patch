@@ -1,0 +1,7 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    ansible_ssh_user: ec2-user
+  roles:
+    - ansible-role-tcpsack-firewall-patch

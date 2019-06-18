@@ -1,11 +1,21 @@
 ---
+- name: Verify Ansible meets service_facts module version requirements.
+  assert:
+    that: "ansible_version.full is version_compare('2.8', '>=')"
+    msg: >
+      "You must update Ansible to at least 2.8 to use this module."
+
 - name: collect facts about system services
   service_facts: {}
 
 - name: Ensure IPtables rules are set
   import_tasks: iptables.yml
-  when: ansible_facts.services['iptables.service'].state == "running"
+  when:
+    - ansible_facts.services['iptables.service'] is defined
+    - ansible_facts.services['iptables.service'].status == "enabled"
 
 - name: Ensure Firewalld rules are set
   import_tasks: firewalld.yml
-  when: ansible_facts.services['firewalld.service'].state == "running"
+  when:
+    - ansible_facts.services['firewalld.service'] is defined
+    - ansible_facts.services['firewalld.service'].status == "enabled"

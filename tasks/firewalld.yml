@@ -1,4 +1,4 @@
-- name: Unsupported Warning
+- name: "[firewalld] Unsupported Warning"
   debug:
     msg: "Firewalld is in use on this system, but firewalld functionality is not yet implemented"
   failed_when: true

@@ -1,29 +1,19 @@
-- name: Block malicious IPv4 SACK packets
-  iptables:
-    action: insert
-    chain: INPUT
-    comment: Block malicious IPv4 SACK packets https://access.redhat.com/security/vulnerabilities/tcpsack
-    ip_version: ipv4
-    jump: DROP
-    match: tcpmss --mss 1:500
-    protocol: tcp
-    tcp_flags:
-      flags:
-        - SYN
-      flags_set:
-        - SYN
+- name: "[iptables] Check for existing IPv4 rule"
+  shell: "iptables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
+  register: iptables_check
+  changed_when: false
+  failed_when: false
 
-- name: Block malicious IPv6 SACK packets
-  iptables:
-    action: insert
-    chain: INPUT
-    comment: Block malicious IPv6 SACK packets https://access.redhat.com/security/vulnerabilities/tcpsack
-    ip_version: ipv6
-    jump: DROP
-    match: tcpmss --mss 1:500
-    protocol: tcp
-    tcp_flags:
-      flags:
-        - SYN
-      flags_set:
-        - SYN
+- name: "[iptables] Block malicious IPv4 SACK packets"
+  shell: "iptables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
+  when: iptables_check.rc != 0
+
+- name: "[iptables] Check for existing IPv6 rule"
+  shell: "ip6tables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
+  register: ip6tables_check
+  changed_when: false
+  failed_when: false
+
+- name: "[iptables] Block malicious IPv6 SACK packets"
+  shell: "ip6tables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
+  when: ip6tables_check.rc != 0
