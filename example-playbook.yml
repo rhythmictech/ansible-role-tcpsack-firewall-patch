@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    ansible_ssh_user: ec2-user
+  roles:
+    - ansible-role-tcpsack-firewall-patch
+  tasks:
+    - name: Ensure kernel is up to date
+      yum:
+        name: kernel
+        state: latest
+        disable_excludes: all
+      notify:
+        - restart system
+  handlers:
+    - name: restart system
+      reboot:
+        msg: Reboot initiated by Ansible due to kernel update
