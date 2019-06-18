@@ -4,7 +4,7 @@
   changed_when: false
 
 - name: "[iptables] Check for existing IPv4 rule"
-  shell: "iptables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
+  shell: bash -l -c "iptables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
   args:
     executable: "{{ bash_location.stdout }}"
   register: iptables_check
@@ -12,13 +12,13 @@
   failed_when: iptables_check.stderr.find('command not found') != -1
 
 - name: "[iptables] Block malicious IPv4 SACK packets"
-  shell: "iptables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
+  shell: bash -l -c "iptables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
   args:
     executable: "{{ bash_location.stdout }}"
   when: iptables_check.rc != 0
 
 - name: "[iptables] Check for existing IPv6 rule"
-  shell: "ip6tables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
+  shell: bash -l -c "ip6tables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
   args:
     executable: "{{ bash_location.stdout }}"
   register: ip6tables_check
@@ -26,7 +26,7 @@
   failed_when: ip6tables_check.stderr.find('command not found') != -1
 
 - name: "[iptables] Block malicious IPv6 SACK packets"
-  shell: "ip6tables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
+  shell: bash -l -c "ip6tables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
   args:
     executable: "{{ bash_location.stdout }}"
   when: ip6tables_check.rc != 0
