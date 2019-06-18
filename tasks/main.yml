@@ -5,8 +5,14 @@
     msg: >
       "You must update Ansible to at least 2.8 to use this module."
 
-- name: collect facts about system services
+- name: Collect facts about system services
   service_facts: {}
+
+- name: Ensure mtu_probing is disabled
+  sysctl:
+    name: net.ipv4.tcp_mtu_probing
+    reload: yes
+    value: "0"
 
 - name: Ensure IPtables rules are set
   import_tasks: iptables.yml
