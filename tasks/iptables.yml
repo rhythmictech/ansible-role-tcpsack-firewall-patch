@@ -9,7 +9,7 @@
     executable: "{{ bash_location.stdout }}"
   register: iptables_check
   changed_when: false
-  failed_when: iptables_check.sterr.find('command not found') != -1
+  failed_when: iptables_check.stderr.find('command not found') != -1
 
 - name: "[iptables] Block malicious IPv4 SACK packets"
   shell: "iptables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
@@ -23,7 +23,7 @@
     executable: "{{ bash_location.stdout }}"
   register: ip6tables_check
   changed_when: false
-  failed_when: ip6tables_check.sterr.find('command not found') != -1
+  failed_when: ip6tables_check.stderr.find('command not found') != -1
 
 - name: "[iptables] Block malicious IPv6 SACK packets"
   shell: "ip6tables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
