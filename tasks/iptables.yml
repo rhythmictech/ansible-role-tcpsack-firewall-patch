@@ -1,19 +1,28 @@
+- name: Find bash
+  shell: which bash
+  register: bash_location
+  changed_when: false
+
 - name: "[iptables] Check for existing IPv4 rule"
+  executable: "{{ bash_location.stdout }}"
   shell: "iptables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
   register: iptables_check
   changed_when: false
-  failed_when: false
+  failed_when: iptables_check.sterr.find('command not found') != -1
 
 - name: "[iptables] Block malicious IPv4 SACK packets"
+  executable: "{{ bash_location.stdout }}"
   shell: "iptables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
   when: iptables_check.rc != 0
 
 - name: "[iptables] Check for existing IPv6 rule"
+  executable: "{{ bash_location.stdout }}"
   shell: "ip6tables -L | grep -E '^DROP' | grep -E 'flags:SYN/SYN tcpmss match 1:500$'"
   register: ip6tables_check
   changed_when: false
-  failed_when: false
+  failed_when: ip6tables_check.sterr.find('command not found') != -1
 
 - name: "[iptables] Block malicious IPv6 SACK packets"
+  executable: "{{ bash_location.stdout }}"
   shell: "ip6tables -I INPUT -p tcp --tcp-flags SYN SYN -m tcpmss --mss 1:500 -j DROP"
   when: ip6tables_check.rc != 0
