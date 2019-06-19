@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: "{{hosts}}"
   become: yes
   vars:
     ansible_ssh_user: ec2-user

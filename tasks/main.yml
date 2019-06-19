@@ -8,19 +8,19 @@
 - name: Collect facts about system services
   service_facts: {}
 
-- name: Ensure mtu_probing is disabled
+- name: Ensure mtu_probing is enabled
   sysctl:
     name: net.ipv4.tcp_mtu_probing
     reload: yes
-    value: "0"
+    value: "1"
 
-- name: Ensure IPtables rules are set
+- name: Ensure IPtables rules are unset
   import_tasks: iptables.yml
   when:
     - ansible_facts.services['iptables.service'] is defined
     - ansible_facts.services['iptables.service'].status == "enabled"
 
-- name: Ensure Firewalld rules are set
+- name: Ensure Firewalld rules are unset
   import_tasks: firewalld.yml
   when:
     - ansible_facts.services['firewalld.service'] is defined
